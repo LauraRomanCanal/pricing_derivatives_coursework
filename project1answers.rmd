@@ -77,6 +77,70 @@ The following tree represents the binomial tree of $S_n$ for $n \in \{0,1,2,3,4\
 
 \end{tikzpicture}
 
+The values of the hedging portfolio at each stage are calculated using the backward recursion formula:
+\[
+V_n=(1+r)^{n-T}\widetilde{E}[h(S_T)|F_n]
+\]
+The values of the hedging portfolio are shown in the binomial tree below:
+
+\begin{tikzpicture} [scale=2, every node/.style={scale=2}]
+
+\tikzset{vertex/.style = {shape=circle,draw,minimum size=0.5em}}
+\tikzset{edge/.style = {->,> = latex'}}
+% vertices
+\node[vertex] (a) at  (4,2) {\tiny 2.91};
+\node[vertex] (b) at  (3.5,1) {\tiny 3.42};
+\node[vertex] (c) at (4.5,1) {\tiny 1.85};
+\node[vertex] (d) at (3,0) {\tiny 3.98};
+\node[vertex] (z) at (4,0) {\tiny 2.29};
+\node[vertex] (e) at (5,0) {\tiny 0.82};
+\node[vertex] (f) at (2.5,-1) {\tiny 4.59};
+\node[vertex] (g) at (3.5,-1) {\tiny 2.79};
+\node[vertex] (h) at (4.5,-1) {\tiny 1.14};
+\node[vertex] (i) at (5.5,-1) {\tiny 0.00};
+\node[vertex] (k) at (2,-2) {\tiny 5.25};
+\node[vertex] (l) at (3,-2) {\tiny 3.34};
+\node[vertex] (m) at (4,-2) {\tiny 1.58};
+\node[vertex] (n) at (5,-2) {\tiny 0.00};
+\node[vertex] (o) at (6,-2) {\tiny 0.00};
+
+%edges
+\begin{scope}[every path/.style={-}, every node/.style={inner sep=1pt}]
+       \draw (a) -- node [anchor=south east] {u} (b);
+       \draw (a) -- node [anchor=south west] {d} (c);
+       \draw (b) -- node [anchor=south east] {u} (d);
+       \draw (b) -- node [anchor=south west] {d} (z);
+       \draw (c) -- node [anchor=south west] {d} (e);
+       \draw (c) -- node [anchor=south east] {u} (z);
+       \draw (d) -- node [anchor=south east] {u} (f);
+       \draw (d) -- node [anchor=south west] {d} (g);
+       \draw (z) -- node [anchor=south east] {u} (g);
+       \draw (z) -- node [anchor=south west] {d} (h);
+       \draw (e) -- node [anchor=south east] {u} (h);
+       \draw (e) -- node [anchor=south west] {d} (i);
+       \draw (f) -- node [anchor=south east] {u} (k);
+       \draw (f) -- node [anchor=south west] {d} (l);
+       \draw (g) -- node [anchor=south east] {u} (l);
+       \draw (g) -- node [anchor=south west] {d} (m);
+       \draw (h) -- node [anchor=south east] {u} (m);
+       \draw (h) -- node [anchor=south west] {d} (n);
+       \draw (i) -- node [anchor=south east] {u} (n);
+       \draw (i) -- node [anchor=south west] {d} (o);
+
+\end{scope}
+
+\end{tikzpicture}
+
+The premium fee is calculated using the formula for the expectation of the payoff:
+\[
+V_0=(1+r)^{-T}\widetilde{E}[h(S_T)]
+\]
+Which gives:
+\[
+V_0=1.04^{-4}\times(0.75^4\times5.25+4\times0.75^3\times0.25\times3.34+6\times0.75^2\times0.25^2\times1.58+0+0)=2.91
+\]
+This is the same value as obtained for $V_0$ using backwards recursion.
+
 ## Exercise 2
 
 ```{R}
