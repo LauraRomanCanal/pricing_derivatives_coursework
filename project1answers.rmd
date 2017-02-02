@@ -1,0 +1,183 @@
+---
+title: "Pricing Financial Derivatives Project 1"
+author: "Angus McKay, Laura Roman, Euan Dowers, Veronika Kyuchukova"
+date: "February 2, 2017"
+output: pdf_document
+header-includes: 
+  - \usepackage{tikz}
+  - \usepackage{pgfplots}
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+## Exercise 1
+Consider a binomial model with $r = 0.04, T = 4, d = 0.98, S_0 = 20$ and a European call with maturity $T=4$ and strike price $K = 20$
+In the lecture notes we are given that in the binomial model the no-arbitrage condition is satisfied if and only if 
+\[
+d < 1 + r < u
+\]
+Furthemore, we are given that the risk-neutral probability is given by
+\[
+q = \frac{1+r-d}{u-d} = 0.75
+\]
+So the risk-neutral probability is 0.75.
+
+Since $0.98 < 1.04 < 1.06$, the no-arbitrage condition is satisfied. 
+
+The following tree represents the binomial tree of $S_n$ for $n \in \{0,1,2,3,4\}$. Note that prices are rounded to 1 decimal place for presentation, but rounding is done after evaluation to avoid numerical errors. 
+
+\begin{tikzpicture} [scale=2, every node/.style={scale=2}]
+
+\tikzset{vertex/.style = {shape=circle,draw,minimum size=0.5em}}
+\tikzset{edge/.style = {->,> = latex'}}
+% vertices
+\node[vertex] (a) at  (4,2) {\tiny 20};
+\node[vertex] (b) at  (3.5,1) {\tiny 21.2};
+\node[vertex] (c) at (4.5,1) {\tiny 19.6};
+\node[vertex] (d) at (3,0) {\tiny 22.5};
+\node[vertex] (z) at (4,0) {\tiny 20.8};
+\node[vertex] (e) at (5,0) {\tiny 19.2};
+\node[vertex] (f) at (2.5,-1) {\tiny 23.8};
+\node[vertex] (g) at (3.5,-1) {\tiny 22.0};
+\node[vertex] (h) at (4.5,-1) {\tiny 20.4};
+\node[vertex] (i) at (5.5,-1) {\tiny 18.8};
+\node[vertex] (j) at (5,0) {\tiny 19.2};
+\node[vertex] (k) at (2,-2) {\tiny 25.2};
+\node[vertex] (l) at (3,-2) {\tiny 23.3};
+\node[vertex] (m) at (4,-2) {\tiny 21.6};
+\node[vertex] (n) at (5,-2) {\tiny 20.0};
+\node[vertex] (o) at (6,-2) {\tiny 18.4};
+
+%edges
+\begin{scope}[every path/.style={-}, every node/.style={inner sep=1pt}]
+       \draw (a) -- node [anchor=south east] {u} (b);
+       \draw (a) -- node [anchor=south west] {d} (c);
+       \draw (b) -- node [anchor=south east] {u} (d);
+       \draw (b) -- node [anchor=south west] {d} (z);
+       \draw (c) -- node [anchor=south west] {d} (e);
+       \draw (c) -- node [anchor=south east] {u} (z);
+       \draw (d) -- node [anchor=south east] {u} (f);
+       \draw (d) -- node [anchor=south west] {d} (g);
+       \draw (z) -- node [anchor=south east] {u} (g);
+       \draw (z) -- node [anchor=south west] {d} (h);
+       \draw (e) -- node [anchor=south east] {u} (h);
+       \draw (e) -- node [anchor=south west] {d} (i);
+       \draw (f) -- node [anchor=south east] {u} (k);
+       \draw (f) -- node [anchor=south west] {d} (l);
+       \draw (g) -- node [anchor=south east] {u} (l);
+       \draw (g) -- node [anchor=south west] {d} (m);
+       \draw (h) -- node [anchor=south east] {u} (m);
+       \draw (h) -- node [anchor=south west] {d} (n);
+       \draw (i) -- node [anchor=south east] {u} (n);
+       \draw (i) -- node [anchor=south west] {d} (o);
+
+\end{scope}
+
+\end{tikzpicture}
+
+## Exercise 2
+
+```{R}
+rm(list=ls())
+library(ggplot2)
+
+##################
+### QUESTION 1 ###
+##################
+
+
+
+##################
+### QUESTION 2 ###
+##################
+
+# Part 1
+
+Sn <- function(n,T = 5){
+  # Create function that produces random walk with step size sqrt(T/n)
+  stepsize <- sqrt(T/n)
+  Z <- rbinom(n,1,0.5)
+  Z[Z==1] <- stepsize
+  Z[Z==0] <- -stepsize
+  X <- rep(0,n)
+  X[1] <- Z[1]
+  for ( i in 2:n) { 
+    X[i] = X[i-1] + Z[i] }
+  return(X)
+}
+
+# Now plot the process Sn(t) for n = 10,50,100,1000
+y <- Sn(10)
+x <- seq(0,5,length.out = length(y))
+plot(y=y,x=x,type = 'l')
+
+y <- Sn(50)
+x <- seq(0,5,length.out = length(y))
+plot(y=y,x=x,type = 'l')
+
+y <- Sn(100)
+x <- seq(0,5,length.out = length(y))
+plot(y=y,x=x,type = 'l')
+
+y <- Sn(10000)
+x <- seq(0,5,length.out = length(y))
+plot(y=y,x=x,type = 'l')
+
+######################################
+# PART 2
+######################################
+
+geometric.brownian <- function(n,T,sigma,mu){
+  B <- Sn(n,T)
+  t <- seq(0,T,length.out = n)
+  X <- sigma * B + mu * t
+  return(exp(X))
+}
+
+brownian.drift <- function(n,T,sigma,mu){
+  B <- Sn(n,T)
+  t <- seq(0,T,length.out = n)
+  X <- sigma * B + mu * t
+  return(X)
+}
+
+brownian.bridge <- function(n,T){
+  B <- Sn(n,T)
+  t <- seq(0,1,length.out = n)
+  X <- B - t * B[n]
+}
+
+martingale <- function(n,T) {
+  B <- Sn(n,T)
+  t <- seq(0,T,length.out = n)
+  return(B^2 - t)
+}
+
+n <- 1000
+T <- 1
+t <- seq(0,T,length.out = n)
+
+simulations <- as.data.frame( 
+  cbind(
+    t,
+    geometric.brownian(n,T,sigma = 1, mu = -0.5),
+    geometric.brownian(n,T,sigma = 1, mu = 0.5),
+    brownian.drift(n,T,sigma = 0.1, mu = 1),
+    brownian.drift(n,T,sigma = 1, mu = 0.1),
+    brownian.bridge(n,T),
+    martingale(n,T)
+  )
+)
+
+ggplot(data = simulations,aes(x=t,y=V2)) + 
+  labs(x='t', y='Value of process', title = 'Processes related to Brownian motion') +
+  geom_line(aes(x=t,y=V2,colour='Geometric mu = -.5, sigma=1')) + 
+  geom_line(aes(x=t,y=V3,colour='Geometric mu = .5, sigma=1')) + 
+  geom_line(aes(x=t,y=V4,colour='Drift mu = 1, sigma = 0.1')) + 
+  geom_line(aes(x=t,y=V5,colour='Drift mu = 0.1, sigma = 1')) +
+  geom_line(aes(x=t,y=V6,colour='Brownian Bridge')) +
+  geom_line(aes(x=t,y=V7,colour='Martingale'))
+```
+
