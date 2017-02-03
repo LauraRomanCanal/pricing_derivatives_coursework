@@ -18,13 +18,12 @@ In the lecture notes we are given that in the binomial model the no-arbitrage co
 \[
 d < 1 + r < u
 \]
+so as $0.98 < 1.04 < 1.06$, the no-arbitrage condition is satisfied. 
 Furthemore, we are given that the risk-neutral probability is given by
 \[
 q = \frac{1+r-d}{u-d} = 0.75
 \]
 So the risk-neutral probability is 0.75.
-
-Since $0.98 < 1.04 < 1.06$, the no-arbitrage condition is satisfied. 
 
 The following tree represents the binomial tree of $S_n$ for $n \in \{0,1,2,3,4\}$. Note that prices are rounded to 1 decimal place for presentation, but rounding is done after evaluation to avoid numerical errors. 
 
@@ -187,33 +186,33 @@ plot(y=y,x=x,type = 'l')
 
 geometric.brownian <- function(n,T,sigma,mu){
   B <- Sn(n,T)
-  t <- seq(0,T,length.out = n)
+  t <- seq(0,T,length.out = n+1)
   X <- sigma * B + mu * t
   return(exp(X))
 }
 
 brownian.drift <- function(n,T,sigma,mu){
   B <- Sn(n,T)
-  t <- seq(0,T,length.out = n)
+  t <- seq(0,T,length.out = n+1)
   X <- sigma * B + mu * t
   return(X)
 }
 
 brownian.bridge <- function(n,T){
   B <- Sn(n,T)
-  t <- seq(0,1,length.out = n)
+  t <- seq(0,1,length.out = n+1)
   X <- B - t * B[n]
 }
 
 martingale <- function(n,T) {
   B <- Sn(n,T)
-  t <- seq(0,T,length.out = n)
+  t <- seq(0,T,length.out = n+1)
   return(B^2 - t)
 }
 
 n <- 1000
 T <- 1
-t <- seq(0,T,length.out = n)
+t <- seq(0,T,length.out = n+1)
 
 simulations <- as.data.frame( 
   cbind(
@@ -235,6 +234,5 @@ ggplot(data = simulations,aes(x=t,y=V2)) +
   geom_line(aes(x=t,y=V5,colour='Drift mu = 0.1, sigma = 1')) +
   geom_line(aes(x=t,y=V6,colour='Brownian Bridge')) +
   geom_line(aes(x=t,y=V7,colour='Martingale'))
-
 ```
 
