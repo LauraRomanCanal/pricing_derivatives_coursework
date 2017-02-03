@@ -19,12 +19,11 @@ d <- 0.98
 Sn <- function(n,T = 5){
   # Create function that produces random walk with step size sqrt(T/n)
   stepsize <- sqrt(T/n)
-  Z <- rbinom(n,1,0.5)
+  Z <- rbinom(n+1,1,0.5)
   Z[Z==1] <- stepsize
   Z[Z==0] <- -stepsize
-  X <- rep(0,n)
-  X[1] <- Z[1]
-  for ( i in 2:n) { 
+  X <- rep(0,n+1)
+  for ( i in 2:n+1) { 
     X[i] = X[i-1] + Z[i] }
   return(X)
 }
