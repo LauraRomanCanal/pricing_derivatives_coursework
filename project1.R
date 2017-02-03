@@ -85,33 +85,33 @@ plot(y=y,x=x,type = 'l')
 
 geometric.brownian <- function(n,T,sigma,mu){
   B <- Sn(n,T)
-  t <- seq(0,T,length.out = n)
+  t <- seq(0,T,length.out = n+1)
   X <- sigma * B + mu * t
   return(exp(X))
 }
 
 brownian.drift <- function(n,T,sigma,mu){
   B <- Sn(n,T)
-  t <- seq(0,T,length.out = n)
+  t <- seq(0,T,length.out = n+1)
   X <- sigma * B + mu * t
   return(X)
 }
 
 brownian.bridge <- function(n,T){
   B <- Sn(n,T)
-  t <- seq(0,1,length.out = n)
+  t <- seq(0,1,length.out = n+1)
   X <- B - t * B[n]
 }
 
 martingale <- function(n,T) {
   B <- Sn(n,T)
-  t <- seq(0,T,length.out = n)
+  t <- seq(0,T,length.out = n+1)
   return(B^2 - t)
 }
 
 n <- 1000
 T <- 1
-t <- seq(0,T,length.out = n)
+t <- seq(0,T,length.out = n+1)
 
 simulations <- as.data.frame( 
   cbind(
