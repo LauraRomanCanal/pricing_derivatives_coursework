@@ -57,7 +57,7 @@ Sn <- function(n,T = 5){
   Z[Z==1] <- stepsize
   Z[Z==0] <- -stepsize
   X <- rep(0,n+1)
-  for ( i in 2:n+1) { 
+  for ( i in 1:n+1) { 
     X[i] = X[i-1] + Z[i] }
   return(X)
 }
