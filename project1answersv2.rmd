@@ -324,6 +324,16 @@ ggplot(data = simulations,aes(x=t,y=V2)) +
   geom_line(aes(x=t,y=V6,colour='Brownian Bridge')) +
   geom_line(aes(x=t,y=V7,colour='Martingale'))
 ```
+
+We can make a few observations regarding the plot:
+\begin{itemize}
+\item The parameters $\mu,\sigma$ play an important role in these distributions.
+\item For the brownian motion with drift distribution, if $\mu$ is small, the distribution oscillates around 0 similarly to the brownian bridge and without a noticeable slope. For $\mu = 1$, however, the term of drift is predominant over the randomness of the simulation and the distribution presents a remarkable trend upwards. On the other hand, the greater the $\sigma$ the more volatility on the distribution.
+\item Regarding the geometric brownian motion distributions with a slight slope ($\mu =+-0.1$), for a positive $\mu$ the distribution presents a slight upward trend whereas if negative the trend seems to be downward. Again, because $\sigma=1$, both distributions are quite volatile. 
+\item The Brownian Bridge distribution seems to oscillate around 0.
+\item The martingale distribution has a brownian motion behaviour. 
+\end{itemize}
+
 \pagebreak
 
 ### Annex
